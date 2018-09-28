@@ -1,6 +1,6 @@
 b=$(basename "$PWD")
-[ $# -eq 0 ] && pics="../*.*" || pics=
-[ -e .watermark-annotation ] && annotate="-gravity northwest -fill black -annotate +12+7 @.watermark-annotation -fill white -annotate +11+6 @.watermark-annotation" || annotate=
+[ $# -eq 0 ] && pics="../???*.*" || pics=
+[ -e .watermark-annotation ] && annotate="-gravity northwest -fill black -annotate +12+22 @.watermark-annotation -fill white -annotate +11+21 @.watermark-annotation" || annotate=
 for a in "$@" $pics; do
   echo $a
   convert "$a" -background 'rgb(66, 139, 202)' \
