@@ -60,8 +60,12 @@ b=$(basename "$PWD")
 NEWDIR="${b}_${XRES}x${YRES}"
 mkdir -p $NEWDIR
 
+# Set point size based on Y resolution
+POINTSIZE=$(expr \( $XRES + $YRES \) / 125)
+
 [ $# -eq 0 ] && pics="../???*.*" || pics=
-[ -r .watermark-annotation ] && annotate="-gravity northwest -fill black -annotate +12+22 @.watermark-annotation -fill white -annotate +11+21 @.watermark-annotation" || annotate=
+[ -r .watermark-annotation ] && \
+  annotate="-gravity northwest -fill black -annotate +12+27 @.watermark-annotation -fill white -annotate +11+26 @.watermark-annotation" || annotate=
 for PIC in "$@" $pics; do
   NEWPIC=$NEWDIR/"$(basename "$PIC")"
   echo $PIC '-->' "$NEWPIC"
@@ -69,7 +73,7 @@ for PIC in "$@" $pics; do
 
   [ $DRY_RUN ] || convert "$PIC" -background 'rgb(26, 29, 39)' \
   -sample ${XRES}x${YRES}^ -gravity center -extent ${XRES}x${YRES} \
-  -font Arial -pointsize 48 \
+  -font Arial -pointsize $POINTSIZE \
   -draw "gravity southwest fill black text 12,7 '$b' fill white text 11,6 '$b' " \
   $annotate "$NEWPIC"
   [ $? -gt 0 ] && exit $?
