@@ -58,14 +58,20 @@ YRES=$(echo $resline | sed -e 's/Resolution://g' | tr -s ' ' | cut -d ' ' -f 4)
 
 b=$(basename "$PWD")
 NEWDIR="${b}_${XRES}x${YRES}"
-mkdir -p $NEWDIR
+mkdir -p "$NEWDIR"
 
 # Set point size based on Y resolution
 POINTSIZE=$(expr \( $XRES + $YRES \) / 125)
 
+# Dock is left?  Pad the left annotation margin for display 1.
+DOCKPOS=$(defaults read com.apple.dock orientation)
+[ "$DOCKPOS" = left ] && [ $DISPLAY = 1 ] && ANNXPOS=84 || ANNXPOS=11
+ANNSTROKEXPOS=$(expr $ANNXPOS - 1)
+
 [ $# -eq 0 ] && pics="../???*.*" || pics=
 [ -r .watermark-annotation ] && \
-  annotate="-gravity northwest -fill black -annotate +12+27 @.watermark-annotation -fill white -annotate +11+26 @.watermark-annotation" || annotate=
+  annotate="-gravity northwest -fill black -annotate +${ANNXPOS}+34 @.watermark-annotation
+    -fill white -annotate +${ANNSTROKEXPOS}+33 @.watermark-annotation"
 for PIC in "$@" $pics; do
   NEWPIC=$NEWDIR/"$(basename "$PIC")"
   echo $PIC '-->' "$NEWPIC"
